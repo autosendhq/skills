@@ -5,7 +5,7 @@ Email API integration skill for Claude Code.
 ## Installation
 
 ```bash
-npx skills add autosend/autosend
+npx skills add autosendhq/skills
 ```
 
 ## Features
