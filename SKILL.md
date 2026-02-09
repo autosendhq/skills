@@ -1,15 +1,15 @@
 ---
-name: autosend
+name: AutoSend
 description: >
-  Autosend email API integration. Use when sending transactional emails,
-  managing contacts, or using email templates with Autosend.
+  AutoSend email API integration. Use when sending transactional emails,
+  managing contacts, or using email templates with AutoSend.
   Triggers on: send email with autosend, autosend api, autosend contacts, email template autosend.
 license: MIT
 ---
 
-# Autosend Email API
+# AutoSend Email API
 
-Send transactional emails, manage contacts, and use templates with the Autosend SDK.
+Send transactional emails, manage contacts, and use templates with the AutoSend SDK.
 
 ## Prerequisites
 
@@ -47,7 +47,7 @@ AUTOSEND_API_KEY=your_api_key_here
 ### 3. Initialize the client
 
 ```typescript
-import { Autosend } from 'autosendjs';
+import { Autosend } from "autosendjs";
 
 const autosend = new Autosend(process.env.AUTOSEND_API_KEY);
 ```
@@ -56,10 +56,10 @@ const autosend = new Autosend(process.env.AUTOSEND_API_KEY);
 
 ```typescript
 await autosend.emails.send({
-  from: { email: 'hello@yourdomain.com', name: 'Your Company' },
-  to: { email: 'test@example.com', name: 'Test User' },
-  subject: 'Hello from Autosend!',
-  html: '<h1>It works!</h1><p>Your Autosend integration is ready.</p>',
+  from: { email: "hello@yourdomain.com", name: "Your Company" },
+  to: { email: "test@example.com", name: "Test User" },
+  subject: "Hello from AutoSend!",
+  html: "<h1>It works!</h1><p>Your AutoSend integration is ready.</p>",
 });
 ```
 
@@ -74,15 +74,15 @@ Check your inbox. That's it!
 ### Basic Email
 
 ```typescript
-import { Autosend } from 'autosendjs';
+import { Autosend } from "autosendjs";
 
 const autosend = new Autosend(process.env.AUTOSEND_API_KEY);
 
 await autosend.emails.send({
-  from: { email: 'hello@yourdomain.com', name: 'Your Company' },
-  to: { email: 'user@example.com', name: 'John Doe' },
-  subject: 'Welcome aboard!',
-  html: '<h1>Welcome!</h1><p>Thanks for signing up.</p>',
+  from: { email: "hello@yourdomain.com", name: "Your Company" },
+  to: { email: "user@example.com", name: "John Doe" },
+  subject: "Welcome aboard!",
+  html: "<h1>Welcome!</h1><p>Thanks for signing up.</p>",
 });
 ```
 
@@ -90,11 +90,11 @@ await autosend.emails.send({
 
 ```typescript
 await autosend.emails.send({
-  from: { email: 'hello@yourdomain.com', name: 'Your Company' },
-  to: { email: 'user@example.com', name: 'John Doe' },
-  subject: 'Your order confirmation',
-  html: '<h1>Order Confirmed</h1><p>Order #12345 is on its way!</p>',
-  text: 'Order Confirmed. Order #12345 is on its way!',
+  from: { email: "hello@yourdomain.com", name: "Your Company" },
+  to: { email: "user@example.com", name: "John Doe" },
+  subject: "Your order confirmation",
+  html: "<h1>Order Confirmed</h1><p>Order #12345 is on its way!</p>",
+  text: "Order Confirmed. Order #12345 is on its way!",
 });
 ```
 
@@ -102,10 +102,10 @@ await autosend.emails.send({
 
 ```typescript
 await autosend.emails.send({
-  from: { email: 'hello@yourdomain.com' },
-  to: { email: 'user@example.com' },
-  subject: 'Quick update',
-  html: '<p>Just a quick note.</p>',
+  from: { email: "hello@yourdomain.com" },
+  to: { email: "user@example.com" },
+  subject: "Quick update",
+  html: "<p>Just a quick note.</p>",
 });
 ```
 
@@ -119,13 +119,13 @@ Send emails to multiple recipients with a shared sender, subject, and optional t
 
 ```typescript
 await autosend.emails.bulk({
-  from: { email: 'hello@yourdomain.com', name: 'Your Company' },
-  subject: 'Hello from Autosend!',
-  html: '<p>Hi {{name}}, welcome aboard!</p>',
+  from: { email: "hello@yourdomain.com", name: "Your Company" },
+  subject: "Hello from AutoSend!",
+  html: "<p>Hi {{name}}, welcome aboard!</p>",
   recipients: [
-    { email: 'user1@example.com', name: 'User One' },
-    { email: 'user2@example.com', name: 'User Two' },
-    { email: 'user3@example.com', name: 'User Three' },
+    { email: "user1@example.com", name: "User One" },
+    { email: "user2@example.com", name: "User Two" },
+    { email: "user3@example.com", name: "User Three" },
   ],
 });
 ```
@@ -134,22 +134,22 @@ await autosend.emails.bulk({
 
 ```typescript
 await autosend.emails.bulk({
-  from: { email: 'hello@yourdomain.com', name: 'Your Company' },
-  templateId: 'tmpl_welcome',
+  from: { email: "hello@yourdomain.com", name: "Your Company" },
+  templateId: "tmpl_welcome",
   dynamicData: {
-    companyName: 'Acme Inc',
-    year: '2025',
+    companyName: "Acme Inc",
+    year: "2025",
   },
   recipients: [
     {
-      email: 'alice@example.com',
-      name: 'Alice',
-      dynamicData: { firstName: 'Alice', plan: 'Pro' },
+      email: "alice@example.com",
+      name: "Alice",
+      dynamicData: { firstName: "Alice", plan: "Pro" },
     },
     {
-      email: 'bob@example.com',
-      name: 'Bob',
-      dynamicData: { firstName: 'Bob', plan: 'Starter' },
+      email: "bob@example.com",
+      name: "Bob",
+      dynamicData: { firstName: "Bob", plan: "Starter" },
     },
   ],
 });
@@ -159,16 +159,16 @@ await autosend.emails.bulk({
 
 ```typescript
 const users = [
-  { email: 'alice@example.com', name: 'Alice' },
-  { email: 'bob@example.com', name: 'Bob' },
-  { email: 'charlie@example.com', name: 'Charlie' },
+  { email: "alice@example.com", name: "Alice" },
+  { email: "bob@example.com", name: "Bob" },
+  { email: "charlie@example.com", name: "Charlie" },
 ];
 
 await autosend.emails.bulk({
-  from: { email: 'hello@yourdomain.com', name: 'Your Company' },
-  subject: 'Monthly Newsletter',
-  templateId: 'tmpl_newsletter',
-  dynamicData: { month: 'January' },
+  from: { email: "hello@yourdomain.com", name: "Your Company" },
+  subject: "Monthly Newsletter",
+  templateId: "tmpl_newsletter",
+  dynamicData: { month: "January" },
   recipients: users.map((user) => ({
     email: user.email,
     name: user.name,
@@ -187,15 +187,15 @@ Use pre-built templates with dynamic data.
 
 ```typescript
 await autosend.emails.send({
-  from: { email: 'hello@yourdomain.com', name: 'Your Company' },
-  to: { email: 'user@example.com', name: 'John Doe' },
-  subject: 'Your order is confirmed!',
-  templateId: 'tmpl_order_confirmation',
+  from: { email: "hello@yourdomain.com", name: "Your Company" },
+  to: { email: "user@example.com", name: "John Doe" },
+  subject: "Your order is confirmed!",
+  templateId: "tmpl_order_confirmation",
   dynamicData: {
-    orderNumber: '12345',
-    customerName: 'John',
-    orderTotal: '$99.99',
-    estimatedDelivery: 'March 15, 2025',
+    orderNumber: "12345",
+    customerName: "John",
+    orderTotal: "$99.99",
+    estimatedDelivery: "March 15, 2025",
   },
 });
 ```
@@ -204,14 +204,14 @@ await autosend.emails.send({
 
 ```typescript
 await autosend.emails.send({
-  from: { email: 'hello@yourdomain.com', name: 'Your Company' },
-  to: { email: 'newuser@example.com', name: 'Jane Smith' },
-  subject: 'Welcome to Our Platform!',
-  templateId: 'tmpl_welcome',
+  from: { email: "hello@yourdomain.com", name: "Your Company" },
+  to: { email: "newuser@example.com", name: "Jane Smith" },
+  subject: "Welcome to Our Platform!",
+  templateId: "tmpl_welcome",
   dynamicData: {
-    firstName: 'Jane',
-    activationLink: 'https://yourapp.com/activate?token=abc123',
-    supportEmail: 'support@yourcompany.com',
+    firstName: "Jane",
+    activationLink: "https://yourapp.com/activate?token=abc123",
+    supportEmail: "support@yourcompany.com",
   },
 });
 ```
@@ -220,13 +220,13 @@ await autosend.emails.send({
 
 ```typescript
 await autosend.emails.send({
-  from: { email: 'security@yourdomain.com', name: 'Your Company Security' },
-  to: { email: 'user@example.com', name: 'John Doe' },
-  subject: 'Reset your password',
-  templateId: 'tmpl_password_reset',
+  from: { email: "security@yourdomain.com", name: "Your Company Security" },
+  to: { email: "user@example.com", name: "John Doe" },
+  subject: "Reset your password",
+  templateId: "tmpl_password_reset",
   dynamicData: {
-    resetLink: 'https://yourapp.com/reset?token=xyz789',
-    expiresIn: '24 hours',
+    resetLink: "https://yourapp.com/reset?token=xyz789",
+    expiresIn: "24 hours",
   },
 });
 ```
@@ -241,14 +241,14 @@ Manage your contact lists.
 
 ```typescript
 await autosend.contacts.create({
-  email: 'newcontact@example.com',
-  firstName: 'Jane',
-  lastName: 'Smith',
-  listIds: ['list_newsletter', 'list_customers'],
+  email: "newcontact@example.com",
+  firstName: "Jane",
+  lastName: "Smith",
+  listIds: ["list_newsletter", "list_customers"],
   customFields: {
-    company: 'Acme Inc',
-    plan: 'premium',
-    signupDate: '2025-01-15',
+    company: "Acme Inc",
+    plan: "premium",
+    signupDate: "2025-01-15",
   },
 });
 ```
@@ -256,7 +256,7 @@ await autosend.contacts.create({
 ### Get Contact
 
 ```typescript
-const contact = await autosend.contacts.get('contact_abc123');
+const contact = await autosend.contacts.get("contact_abc123");
 
 console.log(contact.email);
 console.log(contact.firstName);
@@ -269,12 +269,12 @@ Create or update a contact by email. Perfect for sync workflows.
 
 ```typescript
 await autosend.contacts.upsert({
-  email: 'user@example.com',
-  firstName: 'John',
-  lastName: 'Doe',
-  listIds: ['list_active_users'],
+  email: "user@example.com",
+  firstName: "John",
+  lastName: "Doe",
+  listIds: ["list_active_users"],
   customFields: {
-    lastLogin: '2025-02-01',
+    lastLogin: "2025-02-01",
     totalOrders: 5,
   },
 });
@@ -283,37 +283,37 @@ await autosend.contacts.upsert({
 ### Delete Contact
 
 ```typescript
-await autosend.contacts.delete('contact_abc123');
+await autosend.contacts.delete("contact_abc123");
 ```
 
 ### Full Contact Workflow
 
 ```typescript
-import { Autosend } from 'autosendjs';
+import { Autosend } from "autosendjs";
 
 const autosend = new Autosend(process.env.AUTOSEND_API_KEY);
 
 // Create a new contact when user signs up
 async function onUserSignup(user: { email: string; name: string }) {
-  const [firstName, lastName] = user.name.split(' ');
+  const [firstName, lastName] = user.name.split(" ");
 
   await autosend.contacts.create({
     email: user.email,
     firstName,
     lastName,
-    listIds: ['list_new_signups'],
+    listIds: ["list_new_signups"],
     customFields: {
-      signupSource: 'web',
+      signupSource: "web",
       signupDate: new Date().toISOString(),
     },
   });
 
   // Send welcome email
   await autosend.emails.send({
-    from: { email: 'hello@yourdomain.com', name: 'Your Company' },
+    from: { email: "hello@yourdomain.com", name: "Your Company" },
     to: { email: user.email, name: user.name },
-    subject: 'Welcome!',
-    templateId: 'tmpl_welcome',
+    subject: "Welcome!",
+    templateId: "tmpl_welcome",
     dynamicData: { firstName },
   });
 }
@@ -326,7 +326,7 @@ async function onUserSignup(user: { email: string; name: string }) {
 ### TypeScript Types
 
 ```typescript
-import { Autosend } from 'autosendjs';
+import { Autosend } from "autosendjs";
 
 // Email types
 interface EmailAddress {
@@ -395,27 +395,27 @@ interface UpsertContactOptions {
 ### Error Handling
 
 ```typescript
-import { Autosend } from 'autosendjs';
+import { Autosend } from "autosendjs";
 
 const autosend = new Autosend(process.env.AUTOSEND_API_KEY);
 
 try {
   await autosend.emails.send({
-    from: { email: 'hello@yourdomain.com' },
-    to: { email: 'user@example.com' },
-    subject: 'Test',
-    html: '<p>Test email</p>',
+    from: { email: "hello@yourdomain.com" },
+    to: { email: "user@example.com" },
+    subject: "Test",
+    html: "<p>Test email</p>",
   });
-  console.log('Email sent successfully!');
+  console.log("Email sent successfully!");
 } catch (error) {
-  if (error.code === 'UNAUTHORIZED') {
-    console.error('Invalid API key');
-  } else if (error.code === 'RATE_LIMIT_EXCEEDED') {
-    console.error('Rate limited - try again later');
-  } else if (error.code === 'VALIDATION_FAILED') {
-    console.error('Bad request:', error.message);
+  if (error.code === "UNAUTHORIZED") {
+    console.error("Invalid API key");
+  } else if (error.code === "RATE_LIMIT_EXCEEDED") {
+    console.error("Rate limited - try again later");
+  } else if (error.code === "VALIDATION_FAILED") {
+    console.error("Bad request:", error.message);
   } else {
-    console.error('Unexpected error:', error.message);
+    console.error("Unexpected error:", error.message);
   }
 }
 ```
@@ -423,13 +423,13 @@ try {
 ### SDK Configuration Options
 
 ```typescript
-import { Autosend } from 'autosendjs';
+import { Autosend } from "autosendjs";
 
 const autosend = new Autosend(process.env.AUTOSEND_API_KEY, {
-  baseUrl: 'https://api.autosend.com',  // Custom API endpoint
-  timeout: 30000,                       // Request timeout in ms (default: 30000)
-  maxRetries: 3,                        // Retry failed requests (default: 3)
-  debug: false,                         // Enable debug logging (default: false)
+  baseUrl: "https://api.autosend.com", // Custom API endpoint
+  timeout: 30000, // Request timeout in ms (default: 30000)
+  maxRetries: 3, // Retry failed requests (default: 3)
+  debug: false, // Enable debug logging (default: false)
 });
 ```
 

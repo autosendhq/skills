@@ -1,4 +1,4 @@
-# Autosend REST API Reference
+# AutoSend REST API Reference
 
 ## Authentication
 

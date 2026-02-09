@@ -1,4 +1,4 @@
-# Autosend SDK API Reference
+# AutoSend SDK API Reference
 
 Quick reference for SDK methods, parameters, and types.
 
@@ -294,7 +294,7 @@ try {
 
 ## Rate Limits
 
-Rate limits vary by plan. Check official Autosend documentation for current limits.
+Rate limits vary by plan. Check official AutoSend documentation for current limits.
 
 General guidance:
 - Use `emails.bulk()` for batch operations

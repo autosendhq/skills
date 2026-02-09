@@ -1,10 +1,10 @@
-# Autosend Skill
+# AutoSend Skill
 
 Email API integration skill for AI coding agents. Send transactional emails, manage contacts, and use templates through the [autosendjs](https://www.npmjs.com/package/autosendjs) SDK or the [REST API](references/rest-api.md).
 
 ## Prerequisites
 
-- An [Autosend](https://autosend.com) account with a verified sending domain
+- An [AutoSend](https://autosend.com) account with a verified sending domain
 - An API key (Settings > API Keys > Generate API Key)
 - Environment variable set: `export AUTOSEND_API_KEY=as_your_key_here`
 
@@ -28,8 +28,8 @@ const autosend = new Autosend(process.env.AUTOSEND_API_KEY);
 await autosend.emails.send({
   from: { email: 'hello@yourdomain.com', name: 'Your Company' },
   to: { email: 'user@example.com', name: 'Test User' },
-  subject: 'Hello from Autosend!',
-  html: '<h1>It works!</h1><p>Your Autosend integration is ready.</p>',
+  subject: 'Hello from AutoSend!',
+  html: '<h1>It works!</h1><p>Your AutoSend integration is ready.</p>',
 });
 ```
 
@@ -46,9 +46,9 @@ await autosend.emails.send({
 ## Documentation
 
 - [SKILL.md](SKILL.md) — Full skill documentation with detailed examples for every feature
-- [API Guide](references/api-guide.md) — Autosend API overview and concepts
+- [API Guide](references/api-guide.md) — AutoSend API overview and concepts
 - [REST API Reference](references/rest-api.md) — Examples for Python, Go, Ruby, Rust, and curl
-- [API Reference](https://docs.autosend.com/api-reference/introduction) — Official Autosend API reference
+- [API Reference](https://docs.autosend.com/api-reference/introduction) — Official AutoSend API reference
 
 ## License
 
