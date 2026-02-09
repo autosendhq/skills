@@ -1,6 +1,6 @@
 # Autosend Skill
 
-Email API integration skill for [Claude Code](https://docs.anthropic.com/en/docs/claude-code). Send transactional emails, manage contacts, and use templates through the [autosendjs](https://www.npmjs.com/package/autosendjs) SDK.
+Email API integration skill for AI coding agents. Send transactional emails, manage contacts, and use templates through the [autosendjs](https://www.npmjs.com/package/autosendjs) SDK or the [REST API](references/rest-api.md).
 
 ## Prerequisites
 
@@ -48,6 +48,7 @@ await autosend.emails.send({
 - [SKILL.md](SKILL.md) — Full skill documentation with detailed examples for every feature
 - [API Guide](references/api-guide.md) — Autosend API overview and concepts
 - [REST API Reference](references/rest-api.md) — Examples for Python, Go, Ruby, Rust, and curl
+- [API Reference](https://docs.autosend.com/api-reference/introduction) — Official Autosend API reference
 
 ## License
 
