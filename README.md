@@ -1,6 +1,6 @@
 # AutoSend Skill
 
-Email API integration skill for AI coding agents. Send transactional emails, manage contacts, and use templates through the [autosendjs](https://www.npmjs.com/package/autosendjs) SDK or the [REST API](references/rest-api.md).
+Email API integration skill for AI coding agents. Send transactional emails, manage contacts, and use templates through the [REST API](SKILL.md) or [TypeScript SDK](references/sdk-guide.md).
 
 ## Prerequisites
 
@@ -45,9 +45,9 @@ await autosend.emails.send({
 
 ## Documentation
 
-- [SKILL.md](SKILL.md) — Full skill documentation with detailed examples for every feature
+- [SKILL.md](SKILL.md) — REST API endpoints, parameter tables, and response formats
+- [SDK Guide](references/sdk-guide.md) — TypeScript SDK examples for all features
 - [API Guide](references/api-guide.md) — AutoSend API overview and concepts
-- [REST API Reference](references/rest-api.md) — Examples for Python, Go, Ruby, Rust, and curl
 - [API Reference](https://docs.autosend.com/api-reference/introduction) — Official AutoSend API reference
 
 ## License

@@ -9,11 +9,15 @@ license: MIT
 
 # AutoSend Email API
 
-Send transactional emails, manage contacts, and use templates with the AutoSend SDK.
+Send transactional emails, manage contacts, and use templates via REST API.
+
+> **Using JavaScript/TypeScript?** See the [SDK Guide](references/sdk-guide.md) for TypeScript examples with the `autosendjs` package.
+
+**Reference:** [API Guide](references/api-guide.md) | [Official API Reference](https://docs.autosend.com/api-reference/introduction)
 
 ## Prerequisites
 
-Complete these steps before using the SDK:
+Complete these steps before using the API:
 
 - [ ] **Create Account** — Sign up at [autosend.com](https://autosend.com)
 - [ ] **Add Domain** — Settings → Domains → Add Domain → Select AWS region ([docs](https://docs.autosend.com/domain))
@@ -24,420 +28,226 @@ Complete these steps before using the SDK:
 
 ---
 
-## Quick Start
+## Authentication
 
-### 1. Install the SDK
-
-```bash
-npm install autosendjs
-```
-
-### 2. Set your API key
-
-```bash
-export AUTOSEND_API_KEY="your_api_key_here"
-```
-
-Or add to `.env`:
+All requests require a Bearer token in the `Authorization` header:
 
 ```
-AUTOSEND_API_KEY=your_api_key_here
+Authorization: Bearer YOUR_API_KEY
 ```
 
-### 3. Initialize the client
+**Base URL:** `https://api.autosend.com/v1`
 
-```typescript
-import { Autosend } from "autosendjs";
-
-const autosend = new Autosend(process.env.AUTOSEND_API_KEY);
-```
-
-### 4. Send a test email
-
-```typescript
-await autosend.emails.send({
-  from: { email: "hello@yourdomain.com", name: "Your Company" },
-  to: { email: "test@example.com", name: "Test User" },
-  subject: "Hello from AutoSend!",
-  html: "<h1>It works!</h1><p>Your AutoSend integration is ready.</p>",
-});
-```
-
-### 5. Verify it worked
-
-Check your inbox. That's it!
+All POST/PUT requests must include `Content-Type: application/json`.
 
 ---
 
-## Send Email
+## Email Operations
 
-### Basic Email
+### Send Email
 
-```typescript
-import { Autosend } from "autosendjs";
+`POST /v1/mails/send`
 
-const autosend = new Autosend(process.env.AUTOSEND_API_KEY);
+Send a single transactional email.
 
-await autosend.emails.send({
-  from: { email: "hello@yourdomain.com", name: "Your Company" },
-  to: { email: "user@example.com", name: "John Doe" },
-  subject: "Welcome aboard!",
-  html: "<h1>Welcome!</h1><p>Thanks for signing up.</p>",
-});
-```
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `from` | `object` | Yes | Sender — `{ "email": "...", "name": "..." }` |
+| `to` | `object` | Yes | Recipient — `{ "email": "...", "name": "..." }` |
+| `subject` | `string` | Yes | Email subject line |
+| `html` | `string` | No | HTML body |
+| `text` | `string` | No | Plain text body |
+| `templateId` | `string` | No | Template ID (replaces html/text) |
+| `dynamicData` | `object` | No | Template variable substitutions |
+| `cc` | `array` | No | CC recipients — `[{ "email": "...", "name": "..." }]` |
+| `bcc` | `array` | No | BCC recipients — `[{ "email": "...", "name": "..." }]` |
+| `replyTo` | `object` | No | Reply-to address — `{ "email": "...", "name": "..." }` |
+| `attachments` | `array` | No | File attachments — `[{ "filename": "...", "content": "..." }]` |
 
-### Email with Plain Text Fallback
+**Response:**
 
-```typescript
-await autosend.emails.send({
-  from: { email: "hello@yourdomain.com", name: "Your Company" },
-  to: { email: "user@example.com", name: "John Doe" },
-  subject: "Your order confirmation",
-  html: "<h1>Order Confirmed</h1><p>Order #12345 is on its way!</p>",
-  text: "Order Confirmed. Order #12345 is on its way!",
-});
-```
-
-### Minimal Example
-
-```typescript
-await autosend.emails.send({
-  from: { email: "hello@yourdomain.com" },
-  to: { email: "user@example.com" },
-  subject: "Quick update",
-  html: "<p>Just a quick note.</p>",
-});
+```json
+{
+  "success": true,
+  "data": { "emailId": "email_abc123" }
+}
 ```
 
 ---
 
-## Bulk Send
+### Bulk Send
+
+`POST /v1/mails/bulk`
 
 Send emails to multiple recipients with a shared sender, subject, and optional template.
 
-### Basic Bulk Send
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `from` | `object` | Yes | Shared sender — `{ "email": "...", "name": "..." }` |
+| `subject` | `string` | No | Shared subject (required unless template provides it) |
+| `html` | `string` | No | Shared HTML body |
+| `text` | `string` | No | Shared plain text body |
+| `templateId` | `string` | No | Template ID for templated emails |
+| `dynamicData` | `object` | No | Shared default template variables |
+| `recipients` | `array` | Yes | Array of recipient objects (max 100) |
 
-```typescript
-await autosend.emails.bulk({
-  from: { email: "hello@yourdomain.com", name: "Your Company" },
-  subject: "Hello from AutoSend!",
-  html: "<p>Hi {{name}}, welcome aboard!</p>",
-  recipients: [
-    { email: "user1@example.com", name: "User One" },
-    { email: "user2@example.com", name: "User Two" },
-    { email: "user3@example.com", name: "User Three" },
-  ],
-});
-```
+**Recipient object:**
 
-### Bulk Send with Template and Per-Recipient Data
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `email` | `string` | Yes | Recipient email address |
+| `name` | `string` | No | Recipient display name |
+| `dynamicData` | `object` | No | Per-recipient variables (overrides shared) |
+| `cc` | `array` | No | Per-recipient CC |
+| `bcc` | `array` | No | Per-recipient BCC |
 
-```typescript
-await autosend.emails.bulk({
-  from: { email: "hello@yourdomain.com", name: "Your Company" },
-  templateId: "tmpl_welcome",
-  dynamicData: {
-    companyName: "Acme Inc",
-    year: "2025",
-  },
-  recipients: [
-    {
-      email: "alice@example.com",
-      name: "Alice",
-      dynamicData: { firstName: "Alice", plan: "Pro" },
-    },
-    {
-      email: "bob@example.com",
-      name: "Bob",
-      dynamicData: { firstName: "Bob", plan: "Starter" },
-    },
-  ],
-});
-```
+> **Limit:** Maximum 100 recipients per bulk request.
 
-### Bulk Send with Loop
+**Response:**
 
-```typescript
-const users = [
-  { email: "alice@example.com", name: "Alice" },
-  { email: "bob@example.com", name: "Bob" },
-  { email: "charlie@example.com", name: "Charlie" },
-];
-
-await autosend.emails.bulk({
-  from: { email: "hello@yourdomain.com", name: "Your Company" },
-  subject: "Monthly Newsletter",
-  templateId: "tmpl_newsletter",
-  dynamicData: { month: "January" },
-  recipients: users.map((user) => ({
-    email: user.email,
-    name: user.name,
-    dynamicData: { firstName: user.name },
-  })),
-});
-```
-
----
-
-## Templates
-
-Use pre-built templates with dynamic data.
-
-### Send with Template
-
-```typescript
-await autosend.emails.send({
-  from: { email: "hello@yourdomain.com", name: "Your Company" },
-  to: { email: "user@example.com", name: "John Doe" },
-  subject: "Your order is confirmed!",
-  templateId: "tmpl_order_confirmation",
-  dynamicData: {
-    orderNumber: "12345",
-    customerName: "John",
-    orderTotal: "$99.99",
-    estimatedDelivery: "March 15, 2025",
-  },
-});
-```
-
-### Welcome Email Template
-
-```typescript
-await autosend.emails.send({
-  from: { email: "hello@yourdomain.com", name: "Your Company" },
-  to: { email: "newuser@example.com", name: "Jane Smith" },
-  subject: "Welcome to Our Platform!",
-  templateId: "tmpl_welcome",
-  dynamicData: {
-    firstName: "Jane",
-    activationLink: "https://yourapp.com/activate?token=abc123",
-    supportEmail: "support@yourcompany.com",
-  },
-});
-```
-
-### Password Reset Template
-
-```typescript
-await autosend.emails.send({
-  from: { email: "security@yourdomain.com", name: "Your Company Security" },
-  to: { email: "user@example.com", name: "John Doe" },
-  subject: "Reset your password",
-  templateId: "tmpl_password_reset",
-  dynamicData: {
-    resetLink: "https://yourapp.com/reset?token=xyz789",
-    expiresIn: "24 hours",
-  },
-});
-```
-
----
-
-## Contacts
-
-Manage your contact lists.
-
-### Create Contact
-
-```typescript
-await autosend.contacts.create({
-  email: "newcontact@example.com",
-  firstName: "Jane",
-  lastName: "Smith",
-  listIds: ["list_newsletter", "list_customers"],
-  customFields: {
-    company: "Acme Inc",
-    plan: "premium",
-    signupDate: "2025-01-15",
-  },
-});
-```
-
-### Get Contact
-
-```typescript
-const contact = await autosend.contacts.get("contact_abc123");
-
-console.log(contact.email);
-console.log(contact.firstName);
-console.log(contact.customFields);
-```
-
-### Upsert Contact
-
-Create or update a contact by email. Perfect for sync workflows.
-
-```typescript
-await autosend.contacts.upsert({
-  email: "user@example.com",
-  firstName: "John",
-  lastName: "Doe",
-  listIds: ["list_active_users"],
-  customFields: {
-    lastLogin: "2025-02-01",
-    totalOrders: 5,
-  },
-});
-```
-
-### Delete Contact
-
-```typescript
-await autosend.contacts.delete("contact_abc123");
-```
-
-### Full Contact Workflow
-
-```typescript
-import { Autosend } from "autosendjs";
-
-const autosend = new Autosend(process.env.AUTOSEND_API_KEY);
-
-// Create a new contact when user signs up
-async function onUserSignup(user: { email: string; name: string }) {
-  const [firstName, lastName] = user.name.split(" ");
-
-  await autosend.contacts.create({
-    email: user.email,
-    firstName,
-    lastName,
-    listIds: ["list_new_signups"],
-    customFields: {
-      signupSource: "web",
-      signupDate: new Date().toISOString(),
-    },
-  });
-
-  // Send welcome email
-  await autosend.emails.send({
-    from: { email: "hello@yourdomain.com", name: "Your Company" },
-    to: { email: user.email, name: user.name },
-    subject: "Welcome!",
-    templateId: "tmpl_welcome",
-    dynamicData: { firstName },
-  });
-}
-```
-
----
-
-## Advanced
-
-### TypeScript Types
-
-```typescript
-import { Autosend } from "autosendjs";
-
-// Email types
-interface EmailAddress {
-  email: string;
-  name?: string;
-}
-
-interface SendEmailOptions {
-  from: EmailAddress;
-  to: EmailAddress;
-  subject: string;
-  html?: string;
-  text?: string;
-  templateId?: string;
-  dynamicData?: Record<string, unknown>;
-  cc?: EmailAddress[];
-  bcc?: EmailAddress[];
-  replyTo?: EmailAddress;
-  attachments?: Array<{ filename: string; content: string }>;
-  unsubscribeGroupId?: string;
-}
-
-interface BulkRecipient {
-  email: string;
-  name?: string;
-  dynamicData?: Record<string, string | number>;
-  cc?: EmailAddress[];
-  bcc?: EmailAddress[];
-}
-
-interface BulkSendEmailOptions {
-  from: EmailAddress;
-  subject?: string;
-  html?: string;
-  text?: string;
-  templateId?: string;
-  dynamicData?: Record<string, string | number>;
-  recipients: BulkRecipient[];
-}
-
-interface SendEmailResponse {
-  success: boolean;
-  data: { emailId: string };
-}
-
-// Contact types
-interface CreateContactOptions {
-  email: string;
-  firstName?: string;
-  lastName?: string;
-  userId?: string;
-  listIds?: string[];
-  customFields?: Record<string, unknown>;
-}
-
-interface UpsertContactOptions {
-  email: string;
-  firstName?: string;
-  lastName?: string;
-  userId?: string;
-  listIds?: string[];
-  customFields?: Record<string, unknown>;
-}
-```
-
-### Error Handling
-
-```typescript
-import { Autosend } from "autosendjs";
-
-const autosend = new Autosend(process.env.AUTOSEND_API_KEY);
-
-try {
-  await autosend.emails.send({
-    from: { email: "hello@yourdomain.com" },
-    to: { email: "user@example.com" },
-    subject: "Test",
-    html: "<p>Test email</p>",
-  });
-  console.log("Email sent successfully!");
-} catch (error) {
-  if (error.code === "UNAUTHORIZED") {
-    console.error("Invalid API key");
-  } else if (error.code === "RATE_LIMIT_EXCEEDED") {
-    console.error("Rate limited - try again later");
-  } else if (error.code === "VALIDATION_FAILED") {
-    console.error("Bad request:", error.message);
-  } else {
-    console.error("Unexpected error:", error.message);
+```json
+{
+  "success": true,
+  "data": {
+    "batchId": "batch_abc123",
+    "totalRecipients": 2,
+    "successCount": 2,
+    "failedCount": 0
   }
 }
 ```
 
-### SDK Configuration Options
+---
 
-```typescript
-import { Autosend } from "autosendjs";
+### Templates
 
-const autosend = new Autosend(process.env.AUTOSEND_API_KEY, {
-  baseUrl: "https://api.autosend.com", // Custom API endpoint
-  timeout: 30000, // Request timeout in ms (default: 30000)
-  maxRetries: 3, // Retry failed requests (default: 3)
-  debug: false, // Enable debug logging (default: false)
-});
+`POST /v1/mails/send` with `templateId`
+
+Send templated emails by passing a `templateId` and `dynamicData` instead of (or alongside) `html`/`text`.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `templateId` | `string` | Yes | Template identifier |
+| `dynamicData` | `object` | No | Key-value pairs for template variables |
+
+Common template IDs:
+
+| Template | ID | Typical Variables |
+|----------|----|-------------------|
+| Order Confirmation | `tmpl_order_confirmation` | `orderNumber`, `customerName`, `orderTotal`, `estimatedDelivery` |
+| Welcome Email | `tmpl_welcome` | `firstName`, `activationLink`, `supportEmail` |
+| Password Reset | `tmpl_password_reset` | `resetLink`, `expiresIn` |
+
+Templates also work with bulk send — pass `templateId` and `dynamicData` in the bulk request body.
+
+---
+
+## Contact Management
+
+### Create Contact
+
+`POST /v1/contacts`
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `email` | `string` | Yes | Contact email address |
+| `firstName` | `string` | No | Contact first name |
+| `lastName` | `string` | No | Contact last name |
+| `userId` | `string` | No | External user ID |
+| `listIds` | `array` | No | Lists to add contact to — `["list_abc", "list_xyz"]` |
+| `customFields` | `object` | No | Custom field values |
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "contact_abc123",
+    "email": "user@example.com",
+    "firstName": "Jane",
+    "lastName": "Smith",
+    "listIds": ["list_abc"],
+    "customFields": {},
+    "createdAt": "2025-01-15T00:00:00Z",
+    "updatedAt": "2025-01-15T00:00:00Z"
+  }
+}
 ```
 
 ---
 
-## Reference
+### Get Contact
 
-For complete API documentation, rate limits, and webhook setup, see:
+`GET /v1/contacts/:id`
 
-- [API Guide](references/api-guide.md)
-- [REST API Reference](references/rest-api.md) - Examples for Python, Go, Ruby, Rust, and curl
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | `string` | Yes | Contact ID (path parameter) |
+
+**Response:** Returns the contact object (same shape as Create Contact response).
+
+---
+
+### Upsert Contact
+
+`POST /v1/contacts/email`
+
+Create or update a contact by email address. If a contact with the given email exists, it is updated; otherwise a new contact is created.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `email` | `string` | Yes | Contact email address |
+| `firstName` | `string` | No | Contact first name |
+| `lastName` | `string` | No | Contact last name |
+| `userId` | `string` | No | External user ID |
+| `listIds` | `array` | No | Lists to add contact to |
+| `customFields` | `object` | No | Custom field values |
+
+**Response:** Returns the contact object (same shape as Create Contact response).
+
+---
+
+### Delete Contact
+
+`DELETE /v1/contacts/:id`
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | `string` | Yes | Contact ID (path parameter) |
+
+**Response:**
+
+```json
+{
+  "success": true
+}
+```
+
+---
+
+## Error Handling
+
+All errors return JSON with an `error` object:
+
+```json
+{
+  "success": false,
+  "error": {
+    "message": "The 'to' field is required",
+    "code": "VALIDATION_FAILED",
+    "details": []
+  }
+}
+```
+
+| Status | Code | Description |
+|--------|------|-------------|
+| `400` | `VALIDATION_FAILED` | Bad request — missing or invalid parameters |
+| `401` | `UNAUTHORIZED` | Invalid or missing API key |
+| `402` | `PAYMENT_REQUIRED` | Plan upgrade needed |
+| `403` | `FORBIDDEN` | Insufficient permissions |
+| `404` | `NOT_FOUND` | Resource not found |
+| `429` | `RATE_LIMIT_EXCEEDED` | Too many requests — retry with backoff |
+| `500` | `SERVER_ERROR` | Internal server error |
+
